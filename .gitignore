@@ -4,10 +4,3 @@ __pycache__/
 results/
 /rapport/
 /rapports/
-*.aux
-*.log
-*.out
-*.toc
-*.synctex.gz
-*.pt
-*.pth

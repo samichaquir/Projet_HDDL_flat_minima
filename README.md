@@ -4,45 +4,9 @@ Projet réalisé dans le cadre du cours HDDL.
 
 Le but est d'étudier le lien entre la forme du minimum atteint pendant l'entraînement d'un réseau et ses performances sur des données qu'il n'a pas vues. On cherche à vérifier expérimentalement si les minima les plus plats généralisent mieux.
 
-## Organisation
-
-```text
-Projet_HDDL_flat_minima/
-├── theorie/
-│   ├── minima_1d.py       # Exemples simples, dérivées et figures
-│   └── README.md          # Explication de la première tâche
-├── data.py                # Données et séparation train/validation/test
-├── models.py              # Architecture du MLP
-├── measures.py            # Loss, accuracy et perturbations des poids
-├── experiment.py          # Entraînement, lancement des essais, CSV et figures
-├── requirements.txt
-├── README.md
-└── FLAT_MINIMA_OPTIMISATION.pdf  # Article de recherche
-```
-
-On garde cinq fichiers Python. Les prochaines fonctions seront ajoutées dans ces fichiers, sans créer un fichier par ticket. Les exemples 2D pourront rejoindre le script de théorie ; le CNN et le Transformer iront dans `models.py`, les changements de distribution dans `data.py`, et les nouvelles mesures dans `measures.py`.
-
-| Personne | Fichiers principaux | Travail |
-| --- | --- | --- |
-| Sami | `theorie/minima_1d.py`, `measures.py` | Théorie 1D, platitude et lien avec les performances |
-| Mathys | `models.py`, `experiment.py` | Théorie 2D, CNN et contrôle des entraînements |
-| Saad | `data.py`, `measures.py` | Données modifiées, métriques et évaluations ; puis petit Transformer |
-
-`experiment.py` reste le point d'entrée commun. Il charge les données, construit le modèle, l'entraîne, calcule les mesures et enregistre les résultats. Pour les fichiers partagés, on se répartit les fonctions avant de modifier le code.
-
-La [liste des tickets](https://github.com/samichaquir/Projet_HDDL_flat_minima/issues) détaille les étapes. Pour le moment, seuls l'exemple théorique 1D et la première expérience MLP sont implémentés ; le CNN, les shifts et le Transformer restent à faire.
-
-Les sorties sont enregistrées dans `results/`, ignoré par Git. Les rapports restent dans `rapport/` ou `rapports/`, également ignorés et non publiés.
-
-## Exemple théorique
-
-```bash
-python theorie/minima_1d.py
-```
-
-La figure compare la loss, la dérivée première et la dérivée seconde de deux paraboles. L'explication est dans [theorie/README.md](theorie/README.md).
-
 ## Première expérience
+
+Les dossiers `theorie/`, `donnees/`, `modeles/` et `mesures/` sont réservés au travail du groupe. Ils contiennent uniquement un `.gitkeep` pour être visibles sur GitHub ; chacun y ajoutera son code au fur et à mesure. Le script initial reste dans `experiment.py`.
 
 Le fichier `experiment.py` entraîne un petit réseau PyTorch sur les chiffres manuscrits de `load_digits` (scikit-learn). Les images font 8 × 8 pixels et le réseau contient une couche cachée de 64 neurones avec ReLU, puis une sortie à 10 classes. Les données sont incluses dans scikit-learn.
 

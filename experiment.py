@@ -9,17 +9,43 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+from sklearn.datasets import load_digits
+from sklearn.model_selection import train_test_split
 from torch import nn
 
-from data import load_data
-from models import make_mlp
-from measures import evaluate, perturbation_losses
+
+def load_data():
+    # Petites images 8 x 8 incluses dans scikit-learn : aucun téléchargement.
+    digits = load_digits()
+    x = digits.data.astype(np.float32) / 16.0
+    y = digits.target
+    # Même séparation stratifiée pour toutes les expériences : 60 % / 20 % / 20 %.
+    x_train, x_test, y_train, y_test = train_test_split(
+        x, y, test_size=0.2, random_state=42, stratify=y
+    )
+    x_train, x_val, y_train, y_val = train_test_split(
+        x_train, y_train, test_size=0.25, random_state=42, stratify=y_train
+    )
+    return [
+        (torch.tensor(a), torch.tensor(b, dtype=torch.long))
+        for a, b in [(x_train, y_train), (x_val, y_val), (x_test, y_test)]
+    ]
+
+
+@torch.no_grad()
+def evaluate(model, data):
+    model.eval()
+    x, y = data
+    logits = model(x)
+    loss = nn.functional.cross_entropy(logits, y).item()
+    accuracy = (logits.argmax(dim=1) == y).float().mean().item()
+    return loss, accuracy
 
 
 def train(train_data, val_data, batch_size, seed, epochs):
     # Une graine donnée donne la même initialisation pour chaque taille de batch.
     torch.manual_seed(seed)
-    model = make_mlp()
+    model = nn.Sequential(nn.Linear(64, 64), nn.ReLU(), nn.Linear(64, 10))
     optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
     generator = torch.Generator().manual_seed(seed)
     x, y = train_data
@@ -40,6 +66,34 @@ def train(train_data, val_data, batch_size, seed, epochs):
             "train_accuracy": train_acc, "val_accuracy": val_acc,
         })
     return model, history
+
+
+@torch.no_grad()
+def perturbation_losses(model, data, radii, repeats, seed):
+    # Chaque tenseur reçoit un bruit de norme radius * norme du tenseur.
+    # On moyenne les pertes pour +bruit et -bruit pour limiter l'effet de pente.
+    parameters = list(model.parameters())
+    original = [p.clone() for p in parameters]
+    baseline, _ = evaluate(model, data)
+    generator = torch.Generator().manual_seed(1000 + seed)
+    deltas = {radius: [] for radius in radii}
+    try:
+        for _ in range(repeats):
+            directions = []
+            for p in original:
+                noise = torch.randn(p.shape, generator=generator)
+                directions.append(noise * p.norm() / noise.norm().clamp_min(1e-12))
+            for radius in radii:
+                losses = []
+                for sign in [-1, 1]:
+                    for p, initial, direction in zip(parameters, original, directions):
+                        p.copy_(initial + sign * radius * direction)
+                    losses.append(evaluate(model, data)[0])
+                deltas[radius].append(np.mean(losses) - baseline)
+    finally:
+        for p, initial in zip(parameters, original):
+            p.copy_(initial)
+    return {radius: float(np.mean(values)) for radius, values in deltas.items()}
 
 
 def save_csv(path, rows):
