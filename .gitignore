@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 .venv/
 results/
+rapport/*.aux
+rapport/*.log
+rapport/*.out
+rapport/*.toc
