@@ -14,4 +14,3 @@ Les essais seront répétés avec plusieurs graines aléatoires pour éviter de 
 
 Le code s'appuiera sur les exemples PyTorch du TP CNN dans `5ModIA-HDDL-main.zip`, notamment pour l'entraînement et le suivi des performances. Le cours `AE.pdf` (page 48 du PDF) donne aussi un exemple utile pour distinguer la mémorisation des données de la généralisation.
 
-Ces supports se trouvent dans le dossier local `HDDL`, à côté du dépôt. Les expériences et les résultats seront ajoutés au fur et à mesure.
