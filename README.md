@@ -1,46 +1,17 @@
-# Projet HDDL — Flat Minima
+﻿# Do flat minima generalize better?
 
-Projet de dernière année d'école d'ingénieur consacré aux minima plats (« flat minima ») en apprentissage profond.
+Projet réalisé dans le cadre du cours HDDL en dernière année d'école d'ingénieur.
 
-## Objectif de travail
+Le but est d'étudier le lien entre la forme du minimum atteint pendant l'entraînement d'un réseau et ses performances sur des données qu'il n'a pas vues. On cherche à vérifier expérimentalement si les minima les plus plats généralisent mieux.
 
-Construire un projet simple, compréhensible et reproductible. Chaque étape doit pouvoir être expliquée : le problème étudié, la méthode utilisée, les expériences et les résultats.
+## Expérience envisagée
 
-Le sujet exact et les livrables attendus seront ajoutés après récupération de l'énoncé. Les choix de modèle, de données et d'expériences restent donc à définir.
+On commencera par un petit réseau de classification, entraîné avec plusieurs tailles de batch. Pour chaque entraînement, on comparera les performances sur les données d'entraînement et de test. On mesurera aussi la variation de la loss lorsque l'on perturbe légèrement les poids, avec la même règle de perturbation pour tous les modèles.
 
-## Démarche prévue
+Les essais seront répétés avec plusieurs graines aléatoires pour éviter de conclure à partir d'un seul entraînement. Le jeu de validation servira à choisir les réglages, et le test à l'évaluation finale.
 
-1. Reformuler le sujet et expliquer les notions nécessaires.
-2. Réaliser une première expérience minimale qui fonctionne.
-3. Ajouter uniquement les comparaisons demandées par le sujet.
-4. Présenter les résultats avec des figures lisibles et expliquer leurs limites.
+## Supports de cours
 
-## Utiliser Git
+Le code s'appuiera sur les exemples PyTorch du TP CNN dans `5ModIA-HDDL-main.zip`, notamment pour l'entraînement et le suivi des performances. Le cours `AE.pdf` (page 48 du PDF) donne aussi un exemple utile pour distinguer la mémorisation des données de la généralisation.
 
-Depuis le dossier du projet, afficher les fichiers modifiés :
-
-```bash
-git status
-```
-
-Après une modification, sélectionner les fichiers à enregistrer, puis créer un commit. Exemple pour ce README :
-
-```bash
-git add README.md
-git commit -m "Précise la présentation du projet"
-git push
-```
-
-Un **commit** enregistre une version du projet sur l'ordinateur. Un **push** envoie les commits sur GitHub.
-
-Pour récupérer les changements présents sur GitHub avant de commencer à travailler :
-
-```bash
-git pull --ff-only
-```
-
-## État actuel
-
-- Dépôt initialisé.
-- Présentation et commandes Git disponibles dans ce fichier.
-- Prochaine étape : ajouter le sujet et définir la première expérience.
+Ces supports se trouvent dans le dossier local `HDDL`, à côté du dépôt. Les expériences et les résultats seront ajoutés au fur et à mesure.
