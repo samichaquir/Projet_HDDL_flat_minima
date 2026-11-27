@@ -3,3 +3,11 @@ __pycache__/
 .venv/
 results/
 /rapport/
+/rapports/
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.pt
+*.pth
